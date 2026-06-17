@@ -37,11 +37,12 @@ window.onload = () => {
     qrScannerRedeem.render(onScanSuccessRedeem);
 };
 
-function onScanSuccess(decodedText) {
-
+function onScanSuccessActivate(decodedText) {
     document.getElementById("codigo").value = decodedText;
-    document.getElementById("codigoRedimir").value = decodedText;
+}
 
+function onScanSuccessRedeem(decodedText) {
+    document.getElementById("codigoRedimir").value = decodedText;
 }
 
 async function activarGiftCard() {
