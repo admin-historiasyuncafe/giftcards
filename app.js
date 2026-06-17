@@ -1,8 +1,97 @@
 const API_URL = "https://sheetdb.io/api/v1/ili8wk3w6v5da";
 
 let currentGiftCard = null;
-let qrScannerActivate = null;
-let qrScannerRedeem = null;
+let activeScanner = null;
+
+async function startActivateScanner(){
+
+    try{
+
+        activeScanner =
+            new Html5Qrcode("reader");
+
+        await activeScanner.start(
+
+            { facingMode: "environment" },
+
+            {
+                fps:10,
+                qrbox:250
+            },
+
+            async(decodedText)=>{
+
+                document.getElementById(
+                    "codigo"
+                ).value = decodedText;
+
+                await activeScanner.stop();
+
+                document.getElementById(
+                    "reader"
+                ).innerHTML = "";
+
+            }
+
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "No se pudo acceder a la cámara."
+        );
+
+    }
+
+}
+
+async function startRedeemScanner(){
+
+    try{
+
+        activeScanner =
+            new Html5Qrcode("readerRedeem");
+
+        await activeScanner.start(
+
+            { facingMode: "environment" },
+
+            {
+                fps:10,
+                qrbox:250
+            },
+
+            async(decodedText)=>{
+
+                document.getElementById(
+                    "codigoRedimir"
+                ).value = decodedText;
+
+                await activeScanner.stop();
+
+                document.getElementById(
+                    "readerRedeem"
+                ).innerHTML = "";
+
+            }
+
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "No se pudo acceder a la cámara."
+        );
+
+    }
+
+}
 
 function showTab(tabName) {
 
@@ -14,31 +103,11 @@ function showTab(tabName) {
 
 }
 
-window.onload = () => {
-
-    showTab("activate");
-
-    qrScannerActivate = new Html5QrcodeScanner(
-        "reader",
-        {
-            fps: 10,
-            qrbox: 250
-        }
-    );
-
-    qrScannerActivate.render(onScanSuccessActivate);
-
-    qrScannerRedeem = new Html5QrcodeScanner(
-        "readerRedeem",
-        {
-            fps: 10,
-            qrbox: 250
-        }
-    );
-
-    qrScannerRedeem.render(onScanSuccessRedeem);
-
-};
+    window.onload = () => {
+    
+        showTab("activate");
+    
+    };
 
 function onScanSuccessActivate(decodedText) {
 
@@ -95,6 +164,18 @@ async function activarGiftCard() {
 
     const empleado =
         document.getElementById("empleadoActivacion").value.trim();
+
+        if (
+        !codigo ||
+        !valorInicial ||
+        !compradoPor ||
+        !telefonoComprador ||
+        !regaladaA ||
+        !empleado
+    ) {
+        alert("Debe completar todos los campos.");
+        return;
+    }
 
     if (!codigo) {
         alert("Escanea un QR primero");
@@ -193,20 +274,6 @@ async function activarGiftCard() {
         alert(
             "Error activando Gift Card"
         );
-
-            if (
-        !codigo ||
-        !valorInicial ||
-        !compradoPor ||
-        !telefonoComprador ||
-        !regaladaA ||
-        !empleado
-    ) {
-        alert(
-            "Debe completar todos los campos."
-        );
-        return;
-    }
 
     }
 
@@ -344,6 +411,15 @@ async function redimirGiftCard() {
         document.getElementById(
             "empleadoRedencion"
         ).value.trim();
+
+    if (
+    !document.getElementById("codigoRedimir").value.trim() ||
+    !document.getElementById("montoRedencion").value.trim() ||
+    !empleado
+) {
+    alert("Debe completar todos los campos.");
+    return;
+}
 
     if (!monto || monto <= 0) {
 
@@ -528,17 +604,6 @@ async function redimirGiftCard() {
         alert(
             "Error procesando la redención"
         );
-
-            if (
-        !document.getElementById("codigoRedimir").value.trim() ||
-        !document.getElementById("montoRedencion").value.trim() ||
-        !empleado
-    ) {
-        alert(
-            "Debe completar todos los campos."
-        );
-        return;
-    }
 
     }
 
