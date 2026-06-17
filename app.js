@@ -57,7 +57,7 @@ async function activarGiftCard() {
             CompradoPor: compradoPor,
             TelefonoComprador: telefonoComprador,
             RegaladaA: regaladaA,
-            FechaActivacion: new Date().toISOString(),
+            FechaActivacion: formatDateTime(),
             FechaExpiracion: "",
             Estado: "ACTIVA",
             Notas: "",
