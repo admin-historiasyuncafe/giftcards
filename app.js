@@ -27,6 +27,8 @@ async function startActivateScanner(){
 
                 await activeScanner.stop();
 
+                activeScanner.clear();
+                
                 document.getElementById(
                     "reader"
                 ).innerHTML = "";
@@ -72,6 +74,8 @@ async function startRedeemScanner(){
 
                 await activeScanner.stop();
 
+                activeScanner.clear();
+                
                 document.getElementById(
                     "readerRedeem"
                 ).innerHTML = "";
