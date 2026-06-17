@@ -272,8 +272,6 @@ async function buscarGiftCard() {
         document.getElementById("balanceDisplay").innerHTML =
             "$" + Number(card.Balance).toFixed(2);
 
-        await cargarHistorial(card.Codigo);
-
     }
     catch(error){
 
@@ -282,68 +280,6 @@ async function buscarGiftCard() {
         alert(
             "Error buscando Gift Card"
         );
-
-    }
-
-}
-
-async function cargarHistorial(codigo){
-
-    try{
-
-        const response =
-            await fetch(
-                `${API_URL}?sheet=Transactions`
-            );
-
-        const data =
-            await response.json();
-
-        const movimientos =
-            data
-            .filter(
-                item => item.Codigo === codigo
-            )
-            .reverse()
-            .slice(0,10);
-
-        if(movimientos.length === 0){
-
-            document.getElementById(
-                "transactionHistory"
-            ).innerHTML = "";
-
-            return;
-        }
-
-        let html =
-            `
-            <div class="info-card">
-            <h3>Últimos Movimientos</h3>
-            `;
-
-        movimientos.forEach(item => {
-
-            html += `
-                <p>
-                ${item.Fecha}
-                <br>
-                - $${item.Monto}
-                </p>
-            `;
-
-        });
-
-        html += `</div>`;
-
-        document.getElementById(
-            "transactionHistory"
-        ).innerHTML = html;
-
-    }
-    catch(error){
-
-        console.error(error);
 
     }
 
@@ -553,10 +489,6 @@ async function redimirGiftCard() {
         document.getElementById(
             "montoRedencion"
         ).value = "";
-
-        await cargarHistorial(
-            currentGiftCard.Codigo
-        );
 
         alert(
             `Redención aplicada.\n\nNuevo balance: $${balanceNuevo.toFixed(2)}`
