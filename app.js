@@ -175,9 +175,14 @@ function formatDateTime() {
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const year = now.getFullYear();
 
-    const hours = String(now.getHours()).padStart(2, "0");
+    let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, "0");
 
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
 
 }
