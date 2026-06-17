@@ -10,13 +10,13 @@ function showTab(tabName) {
 
 }
 
-let qrScanner = null;
+let qrScannerActivate = null;
+let qrScannerRedeem = null;
 
 window.onload = () => {
-
     showTab("activate");
 
-    qrScanner = new Html5QrcodeScanner(
+    qrScannerActivate = new Html5QrcodeScanner(
         "reader",
         {
             fps: 10,
@@ -24,8 +24,17 @@ window.onload = () => {
         }
     );
 
-    qrScanner.render(onScanSuccess);
+    qrScannerActivate.render(onScanSuccessActivate);
 
+    qrScannerRedeem = new Html5QrcodeScanner(
+        "readerRedeem",
+        {
+            fps: 10,
+            qrbox: 250
+        }
+    );
+
+    qrScannerRedeem.render(onScanSuccessRedeem);
 };
 
 function onScanSuccess(decodedText) {
