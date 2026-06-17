@@ -1,3 +1,17 @@
+.app-header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.app-logo{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+}
+
 *{
     margin:0;
     padding:0;
