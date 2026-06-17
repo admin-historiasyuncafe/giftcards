@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Programa de Lealtad de Historias y un Café</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Programa de Lealtad de Historias y un Café</h1>
+
+<div class="tabs">
+<button onclick="showTab('activate')">Activar Gift Card</button>
+<button onclick="showTab('redeem')">Redimir Gift Card</button>
+</div>
+
+<!-- ACTIVAR -->
+
+<div id="activate" class="tab active">
+
+<h2>Activar Gift Card</h2>
+
+<div id="reader"></div>
+
+<input id="codigo" placeholder="Código QR">
+
+<input id="valorInicial" type="number" placeholder="Valor Inicial">
+
+<input id="compradoPor" placeholder="Comprado por">
+
+<input id="telefonoComprador" placeholder="Teléfono Comprador">
+
+<input id="regaladaA" placeholder="Regalada a">
+
+<input id="empleadoActivacion" placeholder="Empleado">
+
+<button onclick="activarGiftCard()">
+Activar Gift Card
+</button>
+
+</div>
+
+<!-- REDIMIR -->
+
+<div id="redeem" class="tab">
+
+<h2>Redimir Gift Card</h2>
+
+<input id="codigoRedimir" placeholder="Código QR">
+
+<button onclick="buscarGiftCard()">
+Buscar
+</button>
+
+<div id="giftInfo"></div>
+
+<input id="montoRedencion"
+type="number"
+placeholder="Monto a utilizar">
+
+<input id="empleadoRedencion"
+placeholder="Empleado">
+
+<button onclick="redimirGiftCard()">
+Aplicar Redención
+</button>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
