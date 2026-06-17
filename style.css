@@ -145,6 +145,23 @@ button{
     cursor:pointer;
 }
 
+.scan-btn{
+    width:100%;
+    padding:18px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:14px;
+    background:#5c857d;
+    color:white;
+    font-size:1.1rem;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.scan-btn:hover{
+    background:#4d7069;
+}
+
 .activate-btn{
     width:100%;
     padding:15px;
