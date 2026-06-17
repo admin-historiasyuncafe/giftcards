@@ -611,27 +611,3 @@ async function redimirGiftCard() {
     }
 
 }
-
-async function stopScanner(){
-
-    try{
-
-        if(activeScanner){
-
-            await activeScanner.stop();
-
-            activeScanner.clear();
-
-            document.getElementById("reader").innerHTML = "";
-            document.getElementById("readerRedeem").innerHTML = "";
-
-        }
-
-    }
-    catch(error){
-
-        console.log(error);
-
-    }
-
-}
