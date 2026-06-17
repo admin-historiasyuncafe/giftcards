@@ -190,6 +190,18 @@ button{
     background:#006c6c;
 }
 
+.close-scan-btn{
+    width:100%;
+    margin-top:8px;
+    margin-bottom:15px;
+    padding:12px;
+    background:#c0392b;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+}
+
 /* INFO CARD */
 
 .info-card{
