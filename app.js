@@ -1,5 +1,7 @@
 const API_URL = "https://sheetdb.io/api/v1/ili8wk3w6v5da";
 
+let currentGiftCard = null;
+
 function showTab(tabName) {
 
     document.querySelectorAll(".tab").forEach(tab => {
@@ -138,6 +140,8 @@ async function buscarGiftCard() {
 
         const card = data[0];
 
+        currentGiftCard = card;
+
         document.getElementById("giftInfo").innerHTML = `
             <div class="info-card">
                 <p><strong>Código:</strong> ${card.Codigo}</p>
@@ -159,11 +163,124 @@ async function buscarGiftCard() {
 
 }
 
-function redimirGiftCard() {
+async function redimirGiftCard() {
 
-    alert(
-        "Perfecto. Ya validamos lectura y escritura. La redención completa será el próximo paso."
-    );
+    if (!currentGiftCard) {
+        alert("Primero busca una Gift Card");
+        return;
+    }
+
+    const monto =
+        parseFloat(
+            document.getElementById("montoRedencion").value
+        );
+
+    const empleado =
+        document.getElementById("empleadoRedencion").value.trim();
+
+    if (!monto || monto <= 0) {
+        alert("Monto inválido");
+        return;
+    }
+
+    const balanceAnterior =
+        parseFloat(currentGiftCard.Balance);
+
+    if (monto > balanceAnterior) {
+        alert("El monto excede el balance disponible");
+        return;
+    }
+
+    const balanceNuevo =
+        Number(
+            (balanceAnterior - monto).toFixed(2)
+        );
+
+    let nuevoEstado = "ACTIVA";
+
+    if (balanceNuevo <= 0) {
+        nuevoEstado = "USADA";
+    }
+
+    try {
+
+        // ACTUALIZAR GIFTCARD
+
+        await fetch(
+            `${API_URL}/Codigo/${encodeURIComponent(currentGiftCard.Codigo)}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    data: {
+                        Balance: balanceNuevo,
+                        Estado: nuevoEstado
+                    }
+                })
+            }
+        );
+
+        // REGISTRAR TRANSACCION
+
+        const transactionId =
+            "TX-" + Date.now();
+
+        await fetch(
+            `${API_URL}?sheet=Transactions`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    data: [{
+                        IDTransaccion: transactionId,
+                        Fecha: formatDateTime(),
+                        Codigo: currentGiftCard.Codigo,
+                        Tipo: "REDENCION",
+                        Monto: monto,
+                        BalanceAnterior: balanceAnterior,
+                        BalanceNuevo: balanceNuevo,
+                        Empleado: empleado
+                    }]
+                })
+            }
+        );
+
+        alert(
+            `Redención aplicada.\n\nNuevo balance: $${balanceNuevo}`
+        );
+
+        currentGiftCard.Balance =
+            balanceNuevo;
+
+        currentGiftCard.Estado =
+            nuevoEstado;
+
+        document.getElementById("giftInfo").innerHTML = `
+            <div class="info-card">
+                <p><strong>Código:</strong> ${currentGiftCard.Codigo}</p>
+                <p><strong>Balance:</strong> $${balanceNuevo}</p>
+                <p><strong>Estado:</strong> ${nuevoEstado}</p>
+                <p><strong>Comprado por:</strong> ${currentGiftCard.CompradoPor}</p>
+                <p><strong>Regalada a:</strong> ${currentGiftCard.RegaladaA}</p>
+            </div>
+        `;
+
+        document.getElementById("montoRedencion").value = "";
+
+    }
+    catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Error procesando la redención"
+        );
+
+    }
 
 }
 
