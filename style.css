@@ -158,6 +158,14 @@ button{
     cursor:pointer;
 }
 
+.scan-help{
+    text-align:center;
+    font-size:.9rem;
+    color:#666;
+    margin-bottom:12px;
+    line-height:1.4;
+}
+
 .scan-btn:hover{
     background:#4d7069;
 }
