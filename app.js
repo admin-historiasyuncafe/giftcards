@@ -108,22 +108,26 @@ async function activarGiftCard() {
 
     try {
 
-        const existingResponse =
-            await fetch(
-                `${API_URL}/search?Codigo=${encodeURIComponent(codigo)}`
-            );
-
-        const existingData =
-            await existingResponse.json();
-
-        if (existingData.length > 0) {
-
-            alert(
-                "Esta Gift Card ya fue activada."
-            );
-
-            return;
-        }
+            const existingResponse =
+        await fetch(API_URL);
+    
+    const existingData =
+        await existingResponse.json();
+    
+    const existe =
+        existingData.some(
+            item =>
+                item.Codigo === codigo
+        );
+    
+    if(existe){
+    
+        alert(
+            "Esta Gift Card ya fue activada."
+        );
+    
+        return;
+    }
 
         const payload = {
 
@@ -246,6 +250,14 @@ async function buscarGiftCard() {
         const card = data[0];
 
         currentGiftCard = card;
+
+            if(
+        parseFloat(card.Balance) <= 0
+    ){
+    
+        card.Estado = "USADA";
+    
+    }
 
         if (card.Estado === "USADA") {
 
