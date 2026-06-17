@@ -123,6 +123,21 @@ async function activarGiftCard() {
 
 async function buscarGiftCard() {
 
+    if(card.Estado === "USADA"){
+
+    document.getElementById("giftInfo").innerHTML = `
+        <div class="info-card">
+            <h3 style="color:red;">
+                Gift Card completamente utilizada
+            </h3>
+
+            <p><strong>Código:</strong> ${card.Codigo}</p>
+        </div>
+    `;
+
+    return;
+}
+    
     const codigo = document.getElementById("codigoRedimir").value.trim();
 
     if (!codigo) {
@@ -181,6 +196,11 @@ async function redimirGiftCard() {
         return;
     }
 
+    if(currentGiftCard.Estado === "USADA"){
+    alert("Esta Gift Card ya fue utilizada completamente.");
+    return;
+    }
+    
     const monto =
         parseFloat(
             document.getElementById("montoRedencion").value
