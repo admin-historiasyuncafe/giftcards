@@ -1,336 +1,263 @@
-const API_URL = "https://sheetdb.io/api/v1/ili8wk3w6v5da";
-
-let currentGiftCard = null;
-
-function showTab(tabName) {
-
-    document.querySelectorAll(".tab").forEach(tab => {
-        tab.classList.remove("active");
-    });
-
-    document.getElementById(tabName).classList.add("active");
-
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-let qrScannerActivate = null;
-let qrScannerRedeem = null;
-
-window.onload = () => {
-    showTab("activate");
-
-    qrScannerActivate = new Html5QrcodeScanner(
-        "reader",
-        {
-            fps: 10,
-            qrbox: 250
-        }
-    );
-
-    qrScannerActivate.render(onScanSuccessActivate);
-
-    qrScannerRedeem = new Html5QrcodeScanner(
-        "readerRedeem",
-        {
-            fps: 10,
-            qrbox: 250
-        }
-    );
-
-    qrScannerRedeem.render(onScanSuccessRedeem);
-};
-
-function onScanSuccessActivate(decodedText) {
-    document.getElementById("codigo").value = decodedText;
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#24272A;
+    color:#24272A;
+    min-height:100vh;
 }
 
-function onScanSuccessRedeem(decodedText) {
-    document.getElementById("codigoRedimir").value = decodedText;
+.container{
+    max-width:950px;
+    margin:auto;
+    padding:25px;
 }
 
-async function activarGiftCard() {
+/* HEADER */
 
-    const existingResponse = await fetch(
-        `${API_URL}/search?Codigo=${encodeURIComponent(codigo)}`
-    );
-    
-    const existingData = await existingResponse.json();
-    
-    if(existingData.length > 0){
-        alert("Esta Gift Card ya fue activada.");
-        return;
-    }
-    
-    const codigo = document.getElementById("codigo").value.trim();
-    const valorInicial = document.getElementById("valorInicial").value.trim();
-    const compradoPor = document.getElementById("compradoPor").value.trim();
-    const telefonoComprador = document.getElementById("telefonoComprador").value.trim();
-    const regaladaA = document.getElementById("regaladaA").value.trim();
-    const empleado = document.getElementById("empleadoActivacion").value.trim();
-
-    if (!codigo) {
-        alert("Escanea un QR primero");
-        return;
-    }
-
-    const payload = {
-        data: [{
-            Codigo: codigo,
-            ValorInicial: valorInicial,
-            Balance: valorInicial,
-            CompradoPor: compradoPor,
-            TelefonoComprador: telefonoComprador,
-            RegaladaA: regaladaA,
-            FechaActivacion: formatDateTime(),
-            FechaExpiracion: "",
-            Estado: "ACTIVA",
-            Notas: "",
-            EmpleadoActivacion: empleado
-        }]
-    };
-
-    try {
-
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        console.log(result);
-
-        alert("Gift Card activada correctamente");
-
-        document.getElementById("valorInicial").value = "";
-        document.getElementById("compradoPor").value = "";
-        document.getElementById("telefonoComprador").value = "";
-        document.getElementById("regaladaA").value = "";
-        document.getElementById("empleadoActivacion").value = "";
-
-    }
-    catch(error) {
-
-        console.error(error);
-
-        alert("Error activando Gift Card");
-
-    }
-
+.app-header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:30px;
 }
 
-async function buscarGiftCard() {
-
-    if(card.Estado === "USADA"){
-
-    document.getElementById("giftInfo").innerHTML = `
-        <div class="info-card">
-            <h3 style="color:red;">
-                Gift Card completamente utilizada
-            </h3>
-
-            <p><strong>Código:</strong> ${card.Codigo}</p>
-        </div>
-    `;
-
-    return;
-}
-    
-    const codigo = document.getElementById("codigoRedimir").value.trim();
-
-    if (!codigo) {
-        alert("Escanea una Gift Card");
-        return;
-    }
-
-    try {
-
-        const response = await fetch(
-            `${API_URL}/search?Codigo=${encodeURIComponent(codigo)}`
-        );
-
-        const data = await response.json();
-
-        console.log(data);
-
-        if (!data.length) {
-
-            document.getElementById("giftInfo").innerHTML =
-                "<p class='error'>Gift Card no encontrada</p>";
-
-            return;
-
-        }
-
-        const card = data[0];
-
-        currentGiftCard = card;
-
-        document.getElementById("giftInfo").innerHTML = `
-            <div class="info-card">
-                <p><strong>Código:</strong> ${card.Codigo}</p>
-                <p><strong>Balance:</strong> $${card.Balance}</p>
-                <p><strong>Estado:</strong> ${card.Estado}</p>
-                <p><strong>Comprado por:</strong> ${card.CompradoPor}</p>
-                <p><strong>Regalada a:</strong> ${card.RegaladaA}</p>
-            </div>
-        `;
-
-    }
-    catch(error) {
-
-        console.error(error);
-
-        alert("Error buscando Gift Card");
-
-    }
-
+.app-logo{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
 
-async function redimirGiftCard() {
-
-    if (!currentGiftCard) {
-        alert("Primero busca una Gift Card");
-        return;
-    }
-
-    if(currentGiftCard.Estado === "USADA"){
-    alert("Esta Gift Card ya fue utilizada completamente.");
-    return;
-    }
-    
-    const monto =
-        parseFloat(
-            document.getElementById("montoRedencion").value
-        );
-
-    const empleado =
-        document.getElementById("empleadoRedencion").value.trim();
-
-    if (!monto || monto <= 0) {
-        alert("Monto inválido");
-        return;
-    }
-
-    const balanceAnterior =
-        parseFloat(currentGiftCard.Balance);
-
-    if (monto > balanceAnterior) {
-        alert("El monto excede el balance disponible");
-        return;
-    }
-
-    const balanceNuevo =
-        Number(
-            (balanceAnterior - monto).toFixed(2)
-        );
-
-    let nuevoEstado = "ACTIVA";
-
-    if (balanceNuevo <= 0) {
-        nuevoEstado = "USADA";
-    }
-
-    try {
-
-        // ACTUALIZAR GIFTCARD
-
-        await fetch(
-            `${API_URL}/Codigo/${encodeURIComponent(currentGiftCard.Codigo)}`,
-            {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    data: {
-                        Balance: balanceNuevo,
-                        Estado: nuevoEstado
-                    }
-                })
-            }
-        );
-
-        // REGISTRAR TRANSACCION
-
-        const transactionId =
-            "TX-" + Date.now();
-
-        await fetch(
-            `${API_URL}?sheet=Transactions`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    data: [{
-                        IDTransaccion: transactionId,
-                        Fecha: formatDateTime(),
-                        Codigo: currentGiftCard.Codigo,
-                        Tipo: "REDENCION",
-                        Monto: monto,
-                        BalanceAnterior: balanceAnterior,
-                        BalanceNuevo: balanceNuevo,
-                        Empleado: empleado
-                    }]
-                })
-            }
-        );
-
-        alert(
-            `Redención aplicada.\n\nNuevo balance: $${balanceNuevo}`
-        );
-
-        currentGiftCard.Balance =
-            balanceNuevo;
-
-        currentGiftCard.Estado =
-            nuevoEstado;
-
-        document.getElementById("giftInfo").innerHTML = `
-            <div class="info-card">
-                <p><strong>Código:</strong> ${currentGiftCard.Codigo}</p>
-                <p><strong>Balance:</strong> $${balanceNuevo}</p>
-                <p><strong>Estado:</strong> ${nuevoEstado}</p>
-                <p><strong>Comprado por:</strong> ${currentGiftCard.CompradoPor}</p>
-                <p><strong>Regalada a:</strong> ${currentGiftCard.RegaladaA}</p>
-            </div>
-        `;
-
-        document.getElementById("montoRedencion").value = "";
-
-    }
-    catch(error) {
-
-        console.error(error);
-
-        alert(
-            "Error procesando la redención"
-        );
-
-    }
-
+h1{
+    color:#ededed;
+    font-size:2rem;
+    font-weight:700;
 }
 
-function formatDateTime() {
+h2{
+    margin-bottom:18px;
+    color:#24272A;
+}
 
-    const now = new Date();
+/* TABS */
 
-    const day = String(now.getDate()).padStart(2, "0");
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const year = now.getFullYear();
+.tabs{
+    display:flex;
+    gap:12px;
+    margin-bottom:20px;
+}
 
-    let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, "0");
+.tabs button{
+    flex:1;
+    padding:15px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:700;
+    transition:.25s;
+}
 
-    const ampm = hours >= 12 ? "PM" : "AM";
+.tabs button:first-child{
+    background:#a57f50;
+    color:white;
+}
 
-    hours = hours % 12;
-    hours = hours ? hours : 12;
+.tabs button:first-child:hover{
+    background:#8d6b42;
+}
 
-    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+.tabs button:last-child{
+    background:#008080;
+    color:white;
+}
 
+.tabs button:last-child:hover{
+    background:#006868;
+}
+
+/* PANELS */
+
+.tab{
+    display:none;
+    background:#ededed;
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 8px 30px rgba(0,0,0,.20);
+}
+
+.tab.active{
+    display:block;
+}
+
+/* INPUTS */
+
+input{
+    width:100%;
+    padding:14px;
+    margin-bottom:14px;
+    border:1px solid #d5d5d5;
+    border-radius:12px;
+    font-size:1rem;
+    background:white;
+    transition:.2s;
+}
+
+input:focus{
+    outline:none;
+    border-color:#5c857d;
+    box-shadow:0 0 0 4px rgba(159,207,202,.35);
+}
+
+/* BUTTONS */
+
+button{
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:600;
+}
+
+/* ACTIVAR */
+
+.activate-btn{
+    width:100%;
+    padding:15px;
+    background:#a57f50;
+    color:white;
+}
+
+.activate-btn:hover{
+    background:#8d6b42;
+}
+
+/* REDIMIR */
+
+.redeem-btn{
+    width:100%;
+    padding:15px;
+    background:#008080;
+    color:white;
+}
+
+.redeem-btn:hover{
+    background:#006868;
+}
+
+/* QR */
+
+#reader,
+#readerRedeem{
+    width:100%;
+    margin-bottom:20px;
+    border-radius:14px;
+    overflow:hidden;
+}
+
+/* CARD INFO */
+
+.info-card{
+    background:white;
+    border-left:6px solid #008080;
+    border-radius:14px;
+    padding:18px;
+    margin-top:15px;
+    margin-bottom:15px;
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.info-card p{
+    margin-bottom:8px;
+}
+
+.info-card p:last-child{
+    margin-bottom:0;
+}
+
+/* BALANCE */
+
+.balance-display{
+    text-align:center;
+    font-size:4rem;
+    font-weight:800;
+    color:#008080;
+    margin:20px 0;
+}
+
+/* STATUS */
+
+.status-active{
+    color:#008080;
+    font-weight:700;
+}
+
+.status-used{
+    color:#c0392b;
+    font-weight:700;
+}
+
+/* LABELS */
+
+label{
+    display:block;
+    margin-bottom:6px;
+    margin-top:12px;
+    font-weight:700;
+    color:#5c857d;
+}
+
+/* SUCCESS */
+
+.success{
+    color:#1b7a37;
+    font-weight:700;
+}
+
+/* ERROR */
+
+.error{
+    color:#c0392b;
+    font-weight:700;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .container{
+        padding:15px;
+    }
+
+    .app-header{
+        flex-direction:row;
+    }
+
+    .app-logo{
+        width:40px;
+        height:40px;
+    }
+
+    h1{
+        font-size:1.4rem;
+        text-align:center;
+    }
+
+    .tabs{
+        flex-direction:column;
+    }
+
+    .balance-display{
+        font-size:3rem;
+    }
+
+    .tab{
+        padding:18px;
+    }
 }
