@@ -190,6 +190,20 @@ async function activarGiftCard() {
             "Error activando Gift Card"
         );
 
+            if (
+        !codigo ||
+        !valorInicial ||
+        !compradoPor ||
+        !telefonoComprador ||
+        !regaladaA ||
+        !empleado
+    ) {
+        alert(
+            "Debe completar todos los campos."
+        );
+        return;
+    }
+
     }
 
 }
@@ -502,6 +516,17 @@ async function redimirGiftCard() {
         alert(
             "Error procesando la redención"
         );
+
+            if (
+        !document.getElementById("codigoRedimir").value.trim() ||
+        !document.getElementById("montoRedencion").value.trim() ||
+        !empleado
+    ) {
+        alert(
+            "Debe completar todos los campos."
+        );
+        return;
+    }
 
     }
 
