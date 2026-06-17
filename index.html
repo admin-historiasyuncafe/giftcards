@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -8,61 +10,121 @@
 <title>Gift Cards - Historias y un Café</title>
 
 <!-- FAVICONS -->
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
 <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+
 <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
 
 <link rel="manifest" href="site.webmanifest">
 
-<meta name="theme-color" content="#6B4423">
+<meta name="theme-color" content="#24272A">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="Gift Cards">
 
 <link rel="stylesheet" href="style.css">
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 </head>
+
 <body>
 
 <div class="container">
 
+```
+<!-- HEADER -->
+
 <div class="app-header">
-    <img src="favicon-32x32.png" class="app-logo">
-    <h1>Gift Cards - Historias y un Café</h1>
+
+    <img
+        src="apple-touch-icon.png"
+        class="app-logo"
+        alt="Gift Cards"
+    >
+
+    <div class="app-title">
+
+        <h1>Gift Cards</h1>
+
+        <p class="subtitle">
+            Historias y un Café
+        </p>
+
+    </div>
+
 </div>
 
+<!-- TABS -->
+
 <div class="tabs">
-<button onclick="showTab('activate')">Activar Gift Card</button>
-<button onclick="showTab('redeem')">Redimir Gift Card</button>
+
+    <button onclick="showTab('activate')">
+        Activar Gift Card
+    </button>
+
+    <button onclick="showTab('redeem')">
+        Redimir Gift Card
+    </button>
+
 </div>
 
 <!-- ACTIVAR -->
 
 <div id="activate" class="tab active">
 
-<h2>Activar Gift Card</h2>
+    <h2>Activar Gift Card</h2>
 
-<div id="reader"></div>
+    <div id="reader"></div>
 
-<input id="codigo" placeholder="Código QR">
+    <input
+        id="codigo"
+        placeholder="Código QR"
+    >
 
-<input id="valorInicial" type="number" placeholder="Valor Inicial">
+    <input
+        id="valorInicial"
+        type="number"
+        step="0.01"
+        placeholder="Valor Inicial"
+    >
 
-<input id="compradoPor" placeholder="Comprado por">
+    <input
+        id="compradoPor"
+        placeholder="Comprado por"
+    >
 
-<input id="telefonoComprador" placeholder="Teléfono Comprador">
+    <input
+        id="telefonoComprador"
+        placeholder="Teléfono Comprador"
+    >
 
-<input id="regaladaA" placeholder="Regalada a">
+    <input
+        id="regaladaA"
+        placeholder="Regalada a"
+    >
 
-<input id="empleadoActivacion" placeholder="Empleado">
+    <input
+        id="empleadoActivacion"
+        placeholder="Empleado"
+    >
 
-<button class="activate-btn"
-onclick="activarGiftCard()">
-Activar Gift Card
-</button>
+    <button
+        class="activate-btn"
+        onclick="activarGiftCard()">
+
+        Activar Gift Card
+
+    </button>
 
 </div>
 
@@ -70,35 +132,64 @@ Activar Gift Card
 
 <div id="redeem" class="tab">
 
-<h2>Redimir Gift Card</h2>
+    <h2>Redimir Gift Card</h2>
 
-<div id="readerRedeem"></div>
+    <div id="readerRedeem"></div>
 
-<input id="codigoRedimir" placeholder="Código QR">
+    <input
+        id="codigoRedimir"
+        placeholder="Código QR"
+    >
 
-<button onclick="buscarGiftCard()">
-Buscar
-</button>
+    <button
+        class="redeem-btn"
+        onclick="buscarGiftCard()">
 
-<div id="giftInfo"></div>
+        Buscar Gift Card
 
-<input id="montoRedencion"
-type="number"
-placeholder="Monto a utilizar">
+    </button>
 
-<input id="empleadoRedencion"
-placeholder="Empleado">
+    <!-- INFO DE LA TARJETA -->
 
-<button class="redeem-btn"
-onclick="redimirGiftCard()">
-Aplicar Redención
-</button>
+    <div id="giftInfo"></div>
+
+    <!-- BALANCE GRANDE -->
+
+    <div
+        id="balanceDisplay"
+        class="balance-display"
+        style="display:none;">
+    </div>
+
+    <!-- REDENCION -->
+
+    <input
+        id="montoRedencion"
+        type="number"
+        step="0.01"
+        placeholder="Monto a utilizar"
+    >
+
+    <input
+        id="empleadoRedencion"
+        placeholder="Empleado"
+    >
+
+    <button
+        class="redeem-btn"
+        onclick="redimirGiftCard()">
+
+        Aplicar Redención
+
+    </button>
 
 </div>
+```
 
 </div>
 
 <script src="app.js"></script>
 
 </body>
+
 </html>
