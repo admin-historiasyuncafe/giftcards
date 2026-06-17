@@ -49,6 +49,17 @@ function onScanSuccessRedeem(decodedText) {
 
 async function activarGiftCard() {
 
+    const existingResponse = await fetch(
+        `${API_URL}/search?Codigo=${encodeURIComponent(codigo)}`
+    );
+    
+    const existingData = await existingResponse.json();
+    
+    if(existingData.length > 0){
+        alert("Esta Gift Card ya fue activada.");
+        return;
+    }
+    
     const codigo = document.getElementById("codigo").value.trim();
     const valorInicial = document.getElementById("valorInicial").value.trim();
     const compradoPor = document.getElementById("compradoPor").value.trim();
