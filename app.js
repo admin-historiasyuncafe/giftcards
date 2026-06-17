@@ -335,8 +335,11 @@ async function buscarGiftCard() {
                     </h3>
 
                     <p>
-                        <strong>Código:</strong>
-                        ${card.Codigo}
+                    <strong>Código:</strong>
+                    <br>
+                    <span class="gift-code">
+                    ${card.Codigo}
+                    </span>
                     </p>
                 </div>
             `;
